@@ -19,7 +19,8 @@ if (isset($_POST['selection'])) // form loaded itself
         $stmt->bind_param("sssssss", $username, $encrypted_password,
                                   $usergroup, $email, $firstname, $lastname, $fullname);
         $username=$_POST['username'];
-        $encrypted_password=$_POST['password'];
+        $encrypted_password=password_hash($_POST['password'],
+                                          PASSWORD_DEFAULT);
         $usergroup=$_POST['usergroup'];
         $email=$_POST['email'];
         $firstname=$_POST['firstname'];
@@ -61,6 +62,9 @@ value="admin">Admin
 <input type="radio" name="usergroup"
 <?php if (isset($usergroup) && $usergroup=="user") echo "checked";?>
 value="user">User
+<input type="radio" name="usergroup"
+<?php if (isset($usergroup) && $usergroup=="superuser") echo "checked";?>
+value="superuser">Super User
 <input type='submit' name='selection' value='Create Account' />
 <input type='submit' name='selection' value='Cancel' />
 </form>

@@ -52,6 +52,42 @@ function printUserTable($conn)
 }
 
 
+function checkAndStoreLogin( $conn, $usernameToTest, $passwordToTest )
+{
+
+    $result=lookupUserName($conn, $usernameToTest);
+    if ($result != FALSE)
+    {
+        $row = $result->fetch_assoc();
+        $encrpytedFromDB = $row['encrypted_password'];
+        if ( password_verify($passwordToTest, $encrpytedFromDB) )
+        {
+          
+            $_SESSION['username'] = $row['username'];
+            $_SESSION['usergroup'] = $row['usergroup'];
+            return TRUE;
+        }
+    }
+    return FALSE;
+}
+
+function lookUpUserName($conn, $usernameToFind)
+{
+    $sql = "SELECT * FROM users WHERE username=? ;"; // SQL with parameters
+        $stmt = $conn->prepare($sql);
+        $stmt->bind_param("s", $usernameToFind);
+        $stmt->execute();
+        $result = $stmt->get_result(); // get the mysqli result
+        if ($result->num_rows == 1) {
+            return $result;
+        }
+            else {
+        return FALSE;
+    }
+
+}
+
+
 ?>
 
 </html>
